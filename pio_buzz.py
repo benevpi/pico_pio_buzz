@@ -10,7 +10,9 @@ from time import sleep
 max_count = 5000
 freq = 1000000
 
-
+#set the pin low, then count down y (from max_count) until it reaches the value of x
+#then set pin high, reset y and loop again. once y=x, the whole program wraps,
+#pulls in new data if there is any, sets the pin low and starts again.
 @asm_pio(sideset_init=PIO.OUT_LOW)
 def pwm_prog():
     label("restart")
@@ -34,6 +36,8 @@ def pwm_prog():
     
 pwm_sm = StateMachine(0, pwm_prog, freq=freq, sideset_base=Pin(0))
 
+#need to load the maximum value into the input shift register
+#this is used to populate the 'y' scratch register each loop so it can then count down from the same number
 pwm_sm.put(max_count)
 pwm_sm.exec("pull()")
 pwm_sm.exec("mov(isr, osr)")
