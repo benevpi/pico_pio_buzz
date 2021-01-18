@@ -1,6 +1,7 @@
   
-# Basic sound output. Pretty horrible square wave buzz
-#todo: check with logic analyser that it's doing what's expected
+# Basic sound output.
+# bit of a buzz-y square wave. Sounds better at higher frequencies than lower ones.
+
 
 from machine import Pin
 from rp2 import PIO, StateMachine, asm_pio
@@ -8,14 +9,14 @@ from time import sleep
 
 max_count = 5000
 freq = 1000000
-#longest period  = freq/maxcount
-#this does a spike
+
+
 @asm_pio(sideset_init=PIO.OUT_LOW)
 def pwm_prog():
     label("restart")
     pull(noblock) .side(0)
-    mov(x, osr) # Keep most recent pull data stashed in X, for recycling by noblock
-    mov(y, isr) # ISR must be preloaded with PWM count max
+    mov(x, osr) 
+    mov(y, isr)
     label("pwmloop")
     jmp(x_not_y, "skip")
     nop()         .side(1)
@@ -31,8 +32,6 @@ def pwm_prog():
     label("skip_down")
     jmp(y_dec, "down_loop")
     
-    
-
 pwm_sm = StateMachine(0, pwm_prog, freq=freq, sideset_base=Pin(0))
 
 pwm_sm.put(max_count)
@@ -41,8 +40,6 @@ pwm_sm.exec("mov(isr, osr)")
 pwm_sm.active(1)
 
 while True:
-    for i in range(max_count):
+    for i in range(int(max_count/2),max_count):
         pwm_sm.put(i)
-        print(i)
-
-
+        sleep(0.001)
