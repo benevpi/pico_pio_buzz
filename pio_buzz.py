@@ -10,9 +10,7 @@ from time import sleep
 max_count = 5000
 freq = 1000000
 
-#set the pin low, then count down y (from max_count) until it reaches the value of x
-#then set pin high, reset y and loop again. once y=x, the whole program wraps,
-#pulls in new data if there is any, sets the pin low and starts again.
+
 @asm_pio(sideset_init=PIO.OUT_LOW)
 def pwm_prog():
     label("restart")
@@ -36,14 +34,69 @@ def pwm_prog():
     
 pwm_sm = StateMachine(0, pwm_prog, freq=freq, sideset_base=Pin(0))
 
-#need to load the maximum value into the input shift register
-#this is used to populate the 'y' scratch register each loop so it can then count down from the same number
 pwm_sm.put(max_count)
 pwm_sm.exec("pull()")
 pwm_sm.exec("mov(isr, osr)")
 pwm_sm.active(1)
 
-while True:
-    for i in range(int(max_count/2),max_count):
-        pwm_sm.put(i)
-        sleep(0.001)
+#note - based on current values of max_count and freq
+def calc_pitch(hertz):
+    return int( -1 * (((1000000/hertz) -20000)/4))
+
+
+notes = [392, 440, 494, 523, 587, 659, 698, 784]
+
+notes_val = []
+for note in notes:
+    notes_val.append(calc_pitch(note))
+'''
+g4 = 392
+a4 = 440
+b4 = 494
+c5 = 523
+d5 = 587
+e5 = 659
+f5 = 698
+g5 = 784
+'''
+
+note_len = 0.1
+pause_len = 0.05
+
+def play_note(note_len, pause_len, val, sm):
+    sm.active(1)
+    sm.put(val)
+    sleep(note_len)
+    sm.active(0)
+    sleep(pause_len)
+
+while True: 
+    play_note(note_len*2, pause_len, notes_val[0], pwm_sm)
+    play_note(note_len, pause_len, notes_val[0], pwm_sm)
+    play_note(note_len*4, pause_len, notes_val[1], pwm_sm)
+    play_note(note_len*4, pause_len, notes_val[0], pwm_sm)
+    play_note(note_len*4, pause_len, notes_val[3], pwm_sm)
+    play_note(note_len*8, pause_len, notes_val[2], pwm_sm)
+
+    play_note(note_len*2, pause_len, notes_val[0], pwm_sm)
+    play_note(note_len, pause_len, notes_val[0], pwm_sm)
+    play_note(note_len*4, pause_len, notes_val[1], pwm_sm)
+    play_note(note_len*4, pause_len, notes_val[0], pwm_sm)
+    play_note(note_len*4, pause_len, notes_val[4], pwm_sm)
+    play_note(note_len*8, pause_len, notes_val[3], pwm_sm)
+
+    play_note(note_len*2, pause_len, notes_val[0], pwm_sm)
+    play_note(note_len, pause_len, notes_val[0], pwm_sm)
+    play_note(note_len*4, pause_len, notes_val[7], pwm_sm)
+    play_note(note_len*4, pause_len, notes_val[5], pwm_sm)
+    play_note(note_len*4, pause_len, notes_val[3], pwm_sm)
+    play_note(note_len*4, pause_len, notes_val[2], pwm_sm)
+    play_note(note_len*4, pause_len, notes_val[1], pwm_sm)
+
+    play_note(note_len*2, pause_len, notes_val[0], pwm_sm)
+    play_note(note_len, pause_len, notes_val[0], pwm_sm)
+    play_note(note_len*4, pause_len, notes_val[1], pwm_sm)
+    play_note(note_len*4, pause_len, notes_val[0], pwm_sm)
+    play_note(note_len*4, pause_len, notes_val[4], pwm_sm)
+    play_note(note_len*8, pause_len, notes_val[3], pwm_sm)
+    sleep(2)
