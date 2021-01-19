@@ -8,11 +8,11 @@ Connect headphones between 0 and ground to hear the sound (might be a bit loud, 
 There are three files here.
 * pio_buzz is an all-in-one file that you can upload to your Pico and it will run.
 * PIOBeep is a library that you can use to build your own beepy programs. The simplest way to use this is with:
-'''
+```
 >>> import PIOBeep
 >>> beeper = PIOBeep.PIOBeep(0,0)
 >>> beeper.play_pitch(10,1,400)
-'''
+```
 * PIOBuzz birthday is happy birthday played using the library.
 
 ## values vs. Pitchs
