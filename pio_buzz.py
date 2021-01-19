@@ -1,13 +1,15 @@
 # Basic sound output.
 # bit of a buzz-y square wave. Sounds better at higher frequencies than lower ones.
 
+#Connect a pair of headphones between pin 0 and ground
+#You may also need a resistor if your headphones are low resistance
+
 from machine import Pin
 from rp2 import PIO, StateMachine, asm_pio
 from time import sleep
 
 max_count = 5000
 freq = 1000000
-
 
 #based on the PWM example.
 @asm_pio(sideset_init=PIO.OUT_LOW)
@@ -20,12 +22,12 @@ def square_prog():
     #start loop
     #here, the pin is low, and it will count down y
     #until y=x, then put the pin high and jump to the next secion
-    label("pwmloop")
-    jmp(x_not_y, "skip")
+    label("uploop")
+    jmp(x_not_y, "skip_up")
     nop()         .side(1)
     jmp("down")
-    label("skip")
-    jmp(y_dec, "pwmloop")
+    label("skip_up")
+    jmp(y_dec, "uploop")
     
     #mirror the above loop, but with the pin high to form the second
     #half of the square wave
@@ -111,3 +113,4 @@ while True:
     play_note(note_len*4, pause_len, notes_val[4], square_sm)
     play_note(note_len*8, pause_len, notes_val[3], square_sm)
     sleep(2)
+
