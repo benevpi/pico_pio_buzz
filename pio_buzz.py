@@ -2,7 +2,8 @@
 # bit of a buzz-y square wave. Sounds better at higher frequencies than lower ones.
 
 #Connect a pair of headphones between pin 0 and ground
-#You may also need a resistor if your headphones are low resistance
+#You may also need a resistor in series (circa 220 ohms should be ok, but go up to 250-300 if your headphones are low resistance).
+#You may be able to get away without a resistor, but don't blame me if you damage your Pico and/or headphones
 
 from machine import Pin
 from rp2 import PIO, StateMachine, asm_pio
