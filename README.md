@@ -2,6 +2,9 @@
 
 A simple PIO program that outputs a tone based on a number going into it. I've not yet done the maths to work out what number means what note, but it seems to give a nice range over audible tones. A bit buzzy at lower frequencies, but sounds nicer higher up.
 
+![Pico_pio_buzz in action](https://github.com/benevpi/pico_pio_buzz/blob/main/IMG_20210119_132557768.jpg)
+
+
 Connect headphones between 0 and ground to hear the sound (might be a bit loud, so don't put them on headphones on until you've run it to check). A good idea to add a circa 220 ohm resistor in series. You may be able to get away without this, but don't blame me if you blow up your headphones and/or Pico!
 
 ## files
