@@ -37,7 +37,7 @@ def square_prog():
 class PIOBeep:
     def __init__(self, sm_id, pin):
     
-        self.square_sm = StateMachine(0, square_prog, freq=freq, sideset_base=Pin(0))
+        self.square_sm = StateMachine(0, square_prog, freq=freq, sideset_base=Pin(pin))
 
         #pre-load the isr with the value of max_count
         self.square_sm.put(max_count)
@@ -50,9 +50,13 @@ class PIOBeep:
     def calc_pitch(self, hertz):
         return int( -1 * (((1000000/hertz) -20000)/4))
     
-    def play_note(self, note_len, pause_len, val):
+    def play_value(self, note_len, pause_len, val):
         self.square_sm.active(1)
         self.square_sm.put(val)
         sleep(note_len)
         self.square_sm.active(0)
         sleep(pause_len)
+        
+    def play_pitch(self, note_len, pause_len, pitch):
+        self.play_value(note_len, pause_len, calc_pitch(pitch))
+        
