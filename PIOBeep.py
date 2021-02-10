@@ -58,5 +58,5 @@ class PIOBeep:
         sleep(pause_len)
         
     def play_pitch(self, note_len, pause_len, pitch):
-        self.play_value(note_len, pause_len, calc_pitch(pitch))
+        self.play_value(note_len, pause_len, self.calc_pitch(pitch))
         
