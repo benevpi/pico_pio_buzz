@@ -37,7 +37,7 @@ def square_prog():
 class PIOBeep:
     def __init__(self, sm_id, pin):
     
-        self.square_sm = StateMachine(0, square_prog, freq=freq, sideset_base=Pin(pin))
+        self.square_sm = StateMachine(sm_id, square_prog, freq=freq, sideset_base=Pin(pin))
 
         #pre-load the isr with the value of max_count
         self.square_sm.put(max_count)
